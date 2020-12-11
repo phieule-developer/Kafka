@@ -5,7 +5,7 @@
     "lastName": "Ryan",
     "age": 34,
     "Gender": "M",
-    "bodyTemperature": 36.9,
+    "bodyTemperature": 63.9,
     "overseasTravelHistory": true,
     "eventTimestamp": "2020-03-02 02:09:00"
   },
@@ -25,7 +25,7 @@
     "lastName": "Wright",
     "age": 18,
     "Gender": "F",
-    "bodyTemperature": 36.8,
+    "bodyTemperature": 16.8,
     "overseasTravelHistory": true,
     "eventTimestamp": "2020-03-04 02:09:00"
   },
@@ -35,7 +35,7 @@
     "lastName": "Schmidt",
     "age": 70,
     "Gender": "F",
-    "bodyTemperature": 37.2,
+    "bodyTemperature": 57.2,
     "overseasTravelHistory": false,
     "eventTimestamp": "2020-03-06 01:09:00"
   }

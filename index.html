@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+        <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"></script>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+      <script>
+    var lastDate = 0;
+    var data = []
+    var TICKINTERVAL = 86400000
+    let XAXISRANGE = 777600000
+    function getDayWiseTimeSeries(baseval, count, yrange) {
+      var i = 0;
+      while (i < count) {
+        var x = baseval;
+        var y = 0;
+    
+        data.push({
+          x, y
+        });
+        lastDate = baseval
+        baseval += TICKINTERVAL;
+        i++;
+      }
+    }
+    
+    // getDayWiseTimeSeries(new Date().getTime(), 10, {
+    //   min: 10,
+    //   max: 90
+    // })
+    
+    function getNewSeries(baseval, yrange,value) {
+      var newDate = baseval + TICKINTERVAL;
+      lastDate = newDate
+    
+      for(var i = 0; i< data.length - 10; i++) {
+        // IMPORTANT
+        // we reset the x and y of the data which is out of drawing area
+        // to prevent memory leaks
+        data[i].x = newDate - XAXISRANGE - TICKINTERVAL
+        data[i].y = 0
+      }
+    
+      data.push({
+        x: newDate,
+        y: value
+      })
+    }
+    </script>
+</head>
+<body>
+    <div class="container" style="height: 50%;width: 40%;">
+        <div id="chart"></div>
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    var socket = io('http://localhost:3000');
+    socket.on("test",function(d){
+        getNewSeries(lastDate, {
+        min: 10,
+        max: 90
+      },d.bodyTemperature)
+  
+    chart.updateSeries([{
+      data: data
+    }])
+    })
+       
+  
+    var options = {
+      series: [{
+      data: data.slice()
+    }],
+      chart: {
+      id: 'realtime',
+      height: 350,
+      type: 'line',
+      animations: {
+        enabled: true,
+        easing: 'linear',
+        dynamicAnimation: {
+          speed: 1000
+        }
+      },
+      toolbar: {
+        show: false
+      },
+      zoom: {
+        enabled: false
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: 'smooth'
+    },
+    title: {
+      text: 'Bảng đánh giá chi tiết',
+      align: 'left'
+    },
+    markers: {
+      size: 0
+    },
+    xaxis: {
+      type: 'datetime',
+      range: XAXISRANGE,
+    },
+    yaxis: {
+      max: 100
+    },
+    legend: {
+      show: false
+    },
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+</script>
+</body>
+</html>
